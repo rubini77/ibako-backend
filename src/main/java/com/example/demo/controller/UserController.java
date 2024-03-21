@@ -23,9 +23,9 @@ public class UserController {
 	
 	
 	@PostMapping("/saveuser")
-	public ResponseEntity<?> saveUserInfo(@RequestBody User user){
-	    	userservice.saveUserInfo(user);
-	    	return ResponseEntity.status(HttpStatus.OK).body(user);
+	public ResponseEntity<Boolean> saveUserInfo(@RequestBody User user){
+	    	boolean success = userservice.saveUserInfo(user);
+	    	return ResponseEntity.status(HttpStatus.OK).body(success);
 	    }
 	
 	@PostMapping("/checkuser")
@@ -34,8 +34,6 @@ public class UserController {
 		
 		boolean success=userservice.checkUser(userdto.getEmail(),userdto.getPassword());
 		return ResponseEntity.status(HttpStatus.OK).body(success);
-//		ResponseEntity<?> userexists =userservice.checkUser(user);
-//		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(userexists);
 	}
 
 }

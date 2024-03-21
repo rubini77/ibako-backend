@@ -17,12 +17,17 @@ public class UserServiceImpl implements UserService {
 	UserRepo userrepo;
 	
 	@Override
-	public User saveUserInfo(User user) {
+	public boolean saveUserInfo(User user) {
+		
+		if(userrepo.existsByEmail(user.getEmail())) {
+			return false;
+		}
+		else if(userrepo.existsByName(user.getName())) {
+			return false;
+		}
 		
 		User savedEntity = userrepo.save(user);
-		
-		
-		return savedEntity;
+		return true;
 	}
 
 	@Override
