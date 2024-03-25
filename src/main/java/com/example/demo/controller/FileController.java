@@ -84,7 +84,7 @@ public class FileController {
 		            return ResponseEntity.badRequest().body("Please select a file!");
 		        }
 
-		        // Handle file upload
+		        
 		        MultipartFile file = productdto.getFile();
 		        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
 		        String uploadDir = env.getProperty("resource.uploads");
@@ -99,14 +99,14 @@ public class FileController {
 		            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file!");
 		        }
 
-		        // Update product details
+		        
 		        Optional<Product> optionalProduct = productrepo.findById(id);
 		        if (optionalProduct.isPresent()) {
 		            Product product = optionalProduct.get();
 		            product.setName(productdto.getName());
 		            product.setPrice(productdto.getPrice());
 		            product.setTime(productdto.getTime());
-		            product.setImage(fileName); // Save the filename to the database
+		            product.setImage(fileName); 
 		            productrepo.save(product);
 		            return ResponseEntity.ok(product);
 		        } else {
@@ -117,69 +117,8 @@ public class FileController {
 		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred");
 		    }
 		
-//		try {		
-//		if (productdto.getFile().isEmpty()) {
-//			return new ResponseEntity<>("Please select a file!", HttpStatus.OK);
-//		}
-//		 
-//	            byte bytes[] = productdto.getFile().getBytes();
-//	            UUID uuid = UUID.randomUUID();
-//	            String uploadsLocation = env.getProperty("resource.uploads");
-////	            String fileLocation = uploadsLocation + uuid + productdto.getFile().getOriginalFilename();
-////				Path path = Paths.get(fileLocation);
-////				Files.write(path, bytes);
-////	            String uploadLocation = "D://springboot/Backend-Project/src/main/resources/uploads/";
-//	            String fileLocation = uploadsLocation + uuid + productdto.getFile().getOriginalFilename();
-////	            String fileLocation = uploadsLocation+url;
-//	            Path path = Paths.get(fileLocation);
-//	            Path p = Files.write(path, bytes);
-//				File file = new File(fileLocation);
-//				
-//				File imageFile = new File(fileLocation);
-//				
-//	            
-//	            Product product =  productrepo.findById(id).get();
-//	            product.setName(productdto.getName());
-//	            product.setPrice(productdto.getPrice());
-//	            product.setTime(productdto.getTime());
-//	            product.setImage(imageFile.getName());
-//	            Product savedEntity = productrepo.save(product);
-//	            return ResponseEntity.status(HttpStatus.OK).body(savedEntity);
-//		 }
-//		 catch (Exception e) {
-//	            e.printStackTrace();
-//	            return ResponseEntity.status(HttpStatus.CREATED).body("erroe occurs");
-//	        }
+	
 	}
-	@PutMapping("/update/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable int id, @ModelAttribute ProductDto productDto, @RequestParam(name = "image", required = false) MultipartFile image) {
-        try {
-            Product existingProduct = productrepo.findById(id).orElse(null);
-            if (existingProduct == null) {
-                return ResponseEntity.notFound().build();
-            }
-
-            existingProduct.setName(productDto.getName());
-            existingProduct.setPrice(productDto.getPrice());
-            existingProduct.setTime(productDto.getTime());
-
-            if (image != null && !image.isEmpty()) {
-                byte[] bytes = image.getBytes();
-                String uploadLocation = "D://springboot/Backend-Project/src/main/resources/uploads/";
-                UUID uuid = UUID.randomUUID();
-                String url = uuid + image.getOriginalFilename();
-                String fileLocation = uploadLocation + url;
-                Path path = Paths.get(fileLocation);
-                Files.write(path, bytes);
-                existingProduct.setImage(url);
-            }
-
-            Product updatedProduct = productrepo.save(existingProduct);
-            return ResponseEntity.ok(updatedProduct);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred while updating product.");
-        }
-    }
+	
 
 }
